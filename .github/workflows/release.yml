@@ -1,0 +1,37 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create resource pack zip
+        run: |
+          cd resource-pack/donkey-variations
+          zip -r ../../donkey-variations-${{ steps.get_version.outputs.VERSION }}.zip . -x "*.DS_Store" -x "__MACOSX/*"
+          cd ../..
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: donkey-variations-${{ steps.get_version.outputs.VERSION }}.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

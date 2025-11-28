@@ -1,0 +1,86 @@
+#!/bin/bash
+
+set -e
+
+# Parse named arguments
+PACK_NAME=""
+INSTALL_DIR=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --pack-name)
+            PACK_NAME="$2"
+            shift 2
+            ;;
+        --install-dir)
+            INSTALL_DIR="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Usage: $0 --pack-name <name> [--install-dir <directory>]"
+            echo ""
+            echo "Options:"
+            echo "  --pack-name <name>       Name of the resource pack (required)"
+            echo "  --install-dir <dir>      Installation directory (optional, will prompt if not provided)"
+            echo "  -h, --help               Show this help message"
+            echo ""
+            echo "Available packs:"
+            ls -1 resource/ 2>/dev/null || echo "  (none found)"
+            exit 0
+            ;;
+        *)
+            echo "Error: Unknown argument '$1'"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$PACK_NAME" ]; then
+    echo "Error: --pack-name is required"
+    echo "Usage: $0 --pack-name <name> [--install-dir <directory>]"
+    echo ""
+    echo "Available packs:"
+    ls -1 resource/ 2>/dev/null || echo "  (none found)"
+    exit 1
+fi
+
+PACK_DIR="resource/$PACK_NAME"
+
+if [ ! -d "$PACK_DIR" ]; then
+    echo "Error: Pack '$PACK_NAME' not found in resource/ directory"
+    echo "Available packs:"
+    ls -1 resource/
+    exit 1
+fi
+
+if [ -z "$INSTALL_DIR" ]; then
+    echo "Enter the installation directory:"
+    read INSTALL_DIR
+fi
+
+INSTALL_DIR="${INSTALL_DIR/#\~/$HOME}"
+mkdir -p "$INSTALL_DIR"
+
+TEMP_DIR=$(mktemp -d)
+ZIP_FILE="$TEMP_DIR/${PACK_NAME}.zip"
+
+echo "Creating resource pack zip from $PACK_DIR..."
+
+cd "$PACK_DIR"
+zip -r "$ZIP_FILE" . -x "*.DS_Store" -x "__MACOSX/*"
+cd - > /dev/null
+
+DEST_FILE="$INSTALL_DIR/${PACK_NAME}.zip"
+
+if [ -f "$DEST_FILE" ]; then
+    echo "Backing up existing pack to ${DEST_FILE}.bak"
+    mv "$DEST_FILE" "${DEST_FILE}.bak"
+fi
+
+echo "Installing to $DEST_FILE"
+mv "$ZIP_FILE" "$DEST_FILE"
+
+rm -rf "$TEMP_DIR"
+
+echo "Installed ${PACK_NAME}.zip to $INSTALL_DIR"
