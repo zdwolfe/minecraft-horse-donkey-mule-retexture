@@ -1,0 +1,20 @@
+{
+    "pack": {
+        "pack_format": 34,
+		"min_format": 34,
+		"max_format": 999,
+		"supported_formats": {"min_inclusive": 34, "max_inclusive": 999},
+		"title": "Vanilla Horse Retexture",
+        "description": "Improves vanilla horse colors and patterns"
+    },
+	"overlays": {
+		"entries": [
+			{
+				"formats": {"min_inclusive": 34, "max_inclusive": 999},
+				"min_format": 34,
+				"max_format": 999,
+				"directory": "horse"
+			}
+		]
+	}
+}
