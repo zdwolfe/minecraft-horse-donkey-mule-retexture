@@ -20,16 +20,19 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Create resource pack zip
+      - name: Create resource pack zips
         run: |
-          cd resource-pack/donkey-variations
-          zip -r ../../donkey-variations-${{ steps.get_version.outputs.VERSION }}.zip . -x "*.DS_Store" -x "__MACOSX/*"
-          cd ../..
+          mkdir -p release-artifacts
+
+          ./scripts/install-resource-pack --pack-name donkey-mule-color-variants --install-dir release-artifacts
+          ./scripts/install-resource-pack --pack-name vanilla-horse-retexture --install-dir release-artifacts
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: donkey-variations-${{ steps.get_version.outputs.VERSION }}.zip
+          files: |
+            release-artifacts/donkey-mule-color-variants.zip
+            release-artifacts/vanilla-horse-retexture.zip
           generate_release_notes: true
           draft: false
           prerelease: false
