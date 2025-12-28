@@ -7,6 +7,8 @@ Requires the [Entity Texture Features](https://modrinth.com/mod/entitytexturefea
 
 ## Horse Retexture
 
+[Download on Modrinth](https://modrinth.com/resourcepack/vanilla-horse-retexture)
+
 Improves vanilla horse colors and patterns.
 
 This resource pack fixes the white-on-white and black-on-black horse color combinations that sometimes occur in vanilla. Retexturing is one to one with no randomization (ie. every white horse with white spots will look exactly the same) to stick to a more vanilla Minecraft feel.
@@ -16,6 +18,8 @@ This resource pack fixes the white-on-white and black-on-black horse color combi
 
 
 ## Donkey and Mule Color Variants
+
+[Download on Modrinth](https://modrinth.com/resourcepack/donkey-mule-color-variants)
 
 Adds color variants for donkeys and mules.
 
